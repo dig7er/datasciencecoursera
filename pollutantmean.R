@@ -19,17 +19,14 @@ pollutantmean <- function(directory, pollutant, id = 1:332) {
   output <- NULL
   
   # 1. Validate input parameters
-  if (class(directory) == 'character' & class(pollutant) == 'character' & (class(id) == 'integer' | class(id) == 'numeric')) {
+  if (!(class(directory) == 'character' & class(pollutant) == 'character' & (class(id) == 'integer' | class(id) == 'numeric')))
+    return(output)
     
-    # 1.1. Get the data from the CSV files. Return NULL, in case the data could not be read.
-    polluteData <- getPolluteData(directory, id)
-    if ( is.null(polluteData) )
-      return(NULL)
-    
-    # 1.2. Calculate mean value of the pollutant across all data files
-    output <- mean( polluteData[,pollutant], na.rm=TRUE )
-  }
+  # 2. Get the data from the CSV files. Return NULL, in case the data could not be read.
+  polluteData <- getPolluteData(directory, id)
+  if ( is.null(polluteData) )
+    return(output)
   
-  # 2. Return the mean value calculated in step 1.2.
-  output
+  # 3. Calculate mean value of the pollutant across all data files
+  mean( polluteData[,pollutant], na.rm=TRUE )
 }

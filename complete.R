@@ -17,24 +17,24 @@ complete <- function(directory, id = 1:332) {
   output <- NULL
   
   # 1. Validate input parameters
-  if (class(directory) == 'character' & (class(id) == 'integer' | class(id) == 'numeric')) {
+  if (!(class(directory) == 'character' & (class(id) == 'integer' | class(id) == 'numeric')))
+    return(output)
     
-    # 1.1. Get the data from the CSV files. Return NULL, in case the data could not be read.
-    polluteData <- getPolluteData(directory, id)
-    if ( is.null(polluteData) )
-      return(NULL)
-    
-    # 1.2. Get complete data rows (the data rows where sulfate AND nitrate values are provided)
-    completeDataRows <- polluteData[ !is.na(polluteData[,"sulfate"]) & !is.na(polluteData[,"nitrate"]), ]
-    
-    # 1.3. Calculate frequency of complete data rows for each given monitor ID with the help of table() function
-    completeDataRowsFreq <- table(completeDataRows["ID"])
-    
-    # 1.4. Save the result in a data frame with column names "id" (for monitor ID) and "nobs" (for number of complete data rows for the given monitor ID).
-    output <- as.data.frame( completeDataRowsFreq )
-    names(output) <- c("id", "nobs")
-  }
+  # 2. Get the data from the CSV files. Return NULL, in case the data could not be read.
+  polluteData <- getPolluteData(directory, id)
+  if ( is.null(polluteData) )
+    return(output)
   
-  # 2. Return the data frame from step 1.4 sorted by given id order.
-  output[id,]
+  # 3. Get complete data rows (the data rows where sulfate AND nitrate values are provided)
+  completeDataRows <- polluteData[ !is.na(polluteData[,"sulfate"]) & !is.na(polluteData[,"nitrate"]), ]
+  
+  # 4. Calculate frequency of complete data rows for each given monitor ID with the help of table() function
+  completeDataRowsFreq <- table(completeDataRows["ID"])
+  
+  # 5. Save the result in a data frame with column names "id" (for monitor ID) and "nobs" (for number of complete data rows for the given monitor ID).
+  output <- as.data.frame( completeDataRowsFreq, row.names = names(completeDataRowsFreq) )
+  names(output) <- c("id", "nobs")
+  
+  # 6. Return the data frame from step 1.4 sorted by given id order.
+  output[as.character(id), ]
 }
