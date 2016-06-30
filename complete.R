@@ -28,13 +28,15 @@ complete <- function(directory, id = 1:332) {
   # 3. Get complete data rows (the data rows where sulfate AND nitrate values are provided)
   completeDataRows <- polluteData[ !is.na(polluteData[,"sulfate"]) & !is.na(polluteData[,"nitrate"]), ]
   
-  # 4. Calculate frequency of complete data rows for each given monitor ID with the help of table() function
+  # 4. Calculate frequency of complete data rows for each given monitor ID
+  # with the help of table() function
   completeDataRowsFreq <- table(completeDataRows["ID"])
   
-  # 5. Save the result in a data frame with column names "id" (for monitor ID) and "nobs" (for number of complete data rows for the given monitor ID).
+  # 5. Save the result in a data frame with column names "id" (for monitor ID)
+  # and "nobs" (for number of complete data rows for the given monitor ID).
   output <- as.data.frame( completeDataRowsFreq, row.names = names(completeDataRowsFreq) )
   names(output) <- c("id", "nobs")
   
-  # 6. Return the data frame from step 1.4 sorted by given id order.
+  # 6. Return the data frame from step 5 sorted by given id order.
   output[as.character(id), ]
 }
