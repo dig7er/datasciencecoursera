@@ -31,11 +31,13 @@ complete <- function(directory, id = 1:332) {
   # 4. Calculate frequency of complete data rows for each given monitor ID
   # with the help of table() function
   completeDataRowsFreq <- table(completeDataRows["ID"])
+  totalDataRowsFreq <- rep(0, times=length(id))
+  names(totalDataRowsFreq) <- id
+  totalDataRowsFreq[names(completeDataRowsFreq)] <- completeDataRowsFreq
   
   # 5. Save the result in a data frame with column names "id" (for monitor ID)
   # and "nobs" (for number of complete data rows for the given monitor ID).
-  output <- as.data.frame( completeDataRowsFreq, row.names = names(completeDataRowsFreq) )
-  names(output) <- c("id", "nobs")
+  output <- data.frame(id=names(totalDataRowsFreq), nobs=totalDataRowsFreq, row.names = names(totalDataRowsFreq) )
   
   # 6. Return the data frame from step 5 sorted by given id order.
   output[as.character(id), ]
